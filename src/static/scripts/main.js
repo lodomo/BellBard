@@ -3,36 +3,45 @@ const H1_TEXT = "Bell Bard!";
 const VERSION = "Alpha-0.0.1";
 
 function main() {
-  const main = document.getElementById("main");
-  main.classList.add("container-fluid", "p-0");
-
-  // Add a title to the page
   document.title = TITLE;
-  
-  renderHeader(main);
-  renderBody(main);
-  renderFooter(main);
+  renderHeader();
+  renderMain();
+  renderFooter();
+
 }
 
-function renderHeader(parent) {
-  const header = addElement(parent, "header", ["bg-dark", "text-white", "p-3", "mb-4"]);
-  const h1 = addElement(header, "h1");
-  h1.innerText = H1_TEXT;
+function renderHeader() {
+  const header = document.getElementById("header");
+
+  // Add a centered div with padding of 3,
+  const headerDiv = addElement(header, "div", ["text-center", "p-2"]);
+
+  // Add in an image of /idle.gif with alt text "Bell Bard Logo", width 100, height 100
+  const logo = addElement(headerDiv, "img", []);
+  logo.src = "static/images/idle.gif";
+  logo.alt = "Bell Bard Logo";
+  logo.width = 250;
+  logo.height = 250;
+
+  // On click of the image, change the image to something sing for 2 seconds.
+  logo.addEventListener("click", () => {
+    logo.src = "static/images/sing.gif";
+    setTimeout(() => {
+      logo.src = "static/images/idle.gif";
+    }, 4000);
+  });
 }
 
-function renderBody(parent) {
-  const body = addElement(parent, "main", ["container", "mb-4"]);
-  const p = addElement(body, "p");
-  p.innerText = "This is the main content area.";
+function renderMain() {
+  const main = document.getElementById("main");
+  main.classList.add("container-fluid", "m-0", "p-0");
 }
 
-function renderFooter(parent) {
-  // Force footer to the bottom of the page
-  const footer = addElement(parent, "footer", ["bg-light", "text-center", "p-3", "mt-auto", "border-top"]);
-  const p = addElement(footer, "p");
-  p.innerText = `Version: ${VERSION}`;
+function renderFooter() {
+  const footer = document.getElementById("footer");
+  footer.classList.add("text-center", "p-3");
+  footer.innerText = "© 2025 lodomo.dev | All rights reserved.";
 }
-
 
 
 /**

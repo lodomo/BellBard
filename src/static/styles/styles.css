@@ -1,0 +1,43 @@
+
+:root {
+  --white: #f2f2f0;
+  --muted-green: #abc7aa;
+  --muted-blue: #7597ae;
+  --dark: #23213d;
+  --mid-grey: #76747d;
+  --light-grey: #b9b5c3;
+  --screen-beige: #d7d4cc;
+  --screen-dark: #322f29;
+  --purplish: #57546f;
+
+  --checker-size: 4rem;
+}
+
+
+* {
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+}
+
+
+
+html, body {
+  background-color: var(--purplish);
+  background-image: url("../images/grey-checker.svg");
+  background-repeat: repeat;
+  background-size: var(--checker-size);
+  animation: moveBackground 8s linear infinite;
+}
+
+
+
+/* Animate background to move down and right forever */
+@keyframes moveBackground {
+  0% {
+    background-position: var(--checker-size) calc(-1 * var(--checker-size));
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
