@@ -22,12 +22,71 @@
 
 
 
-html, body {
+html, body, .header {
   background-color: var(--purplish);
   background-image: url("../images/grey-checker.svg");
   background-repeat: repeat;
   background-size: var(--checker-size);
   animation: moveBackground 8s linear infinite;
+}
+
+/* Lock the footer to the bottom of the page */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer {
+  margin-top: auto;
+  background-color: var(--dark);
+  color: var(--white);
+  text-align: center;
+  /* TINY text */
+  font-size: 1rem;
+  padding: 0.5rem;
+}
+
+.volume-icon, .door-open-icon, .door-closed-icon, .play-button {
+  width: 100%;
+  height: auto;
+  padding: 0.5rem;
+}
+
+.volume-bar {
+  height: 3rem;
+  background-color: var(--muted-green);
+  border-radius: 1.5rem;
+  background: var(--muted-green);
+}
+
+/* change slider thumb to a bigger circle */
+.volume-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--muted-blue);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  margin-top: -0.75rem; /* Center the thumb on the track */
+}
+
+.volume-bar::-moz-range-thumb {
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--muted-blue);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.sound-list {
+  background-color: var(--screen-beige);
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 0.5rem;
 }
 
 

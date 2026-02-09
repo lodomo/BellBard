@@ -1,0 +1,42 @@
+[[sound_effects]]
+file_path = "./src/static/sounds/capcom.mp3"
+name = "Capcom"
+on_open = false
+on_close = false
+
+[[sound_effects]]
+file_path = "./src/static/sounds/famima.mp3"
+name = "Famima!"
+on_open = false
+on_close = false
+
+[[sound_effects]]
+file_path = "./src/static/sounds/konami.wav"
+name = "Konami"
+on_open = false
+on_close = false
+
+[[sound_effects]]
+file_path = "./src/static/sounds/mario-tunnel.mp3"
+name = "Mario Tunnel"
+on_open = false
+on_close = false
+
+[[sound_effects]]
+file_path = "./src/static/sounds/minecraft-close.mp3"
+name = "Minecraft Close"
+on_open = false
+on_close = false
+
+[[sound_effects]]
+file_path = "./src/static/sounds/minecraft-open.mp3"
+name = "Minecraft Open"
+on_open = false
+on_close = false
+
+[[sound_effects]]
+file_path = "./src/static/sounds/zelda-solve.mp3"
+name = "Zelda Solve"
+on_open = false
+on_close = false
+
