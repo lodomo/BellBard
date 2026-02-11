@@ -57,8 +57,7 @@ def toggle_state(id):
             save_settings(TOML_FILE_PATH, SOUND_EFFECTS)
             return {"message": "Sound effect activated on open"}, 200
 
-    ACTIVE_ON_OPEN_EFFECTS = [effect for effect in SOUND_EFFECTS if effect.on_open]
-    ACTIVE_ON_CLOSE_EFFECTS = [effect for effect in SOUND_EFFECTS if effect.on_close]
+    update_active_effects()
 
     return {"message": "Sound effect not found"}, 404
 
@@ -112,16 +111,13 @@ def set_volume():
     return {"message": "Volume set successfully"}, 200
 
 
-@app.route("/play/<string:open_or_close>", methods=["POST"])
-def play(open_or_close="open"):
+@app.route("/play", methods=["GET"])
+def play():
     """
     Play all active sound effects based on the value received in the request.
     """
-    if open_or_close == "close":
-        play_on_close()
-        return {"message": "Playing on close sound effects"}, 200
-
     play_on_open()
+    print("Played on open sound effects")
     return {"message": "Playing on open sound effects"}, 200
 
 
@@ -130,7 +126,8 @@ def play_on_open():
     Play all active on open sound effects.
     """
     global OPEN_INDEX
-    OPEN_INDEX %= len(ACTIVE_ON_OPEN_EFFECTS)
+    if OPEN_INDEX >= len(ACTIVE_ON_OPEN_EFFECTS):
+        OPEN_INDEX = 0
 
     # If pygame music is playing, don't do anything
     if pygame.mixer.music.get_busy():
@@ -149,7 +146,8 @@ def play_on_close():
     Play all active on close sound effects.
     """
     global CLOSE_INDEX
-    CLOSE_INDEX %= len(ACTIVE_ON_CLOSE_EFFECTS)
+    if CLOSE_INDEX >= len(ACTIVE_ON_CLOSE_EFFECTS):
+        CLOSE_INDEX = 0
 
     # If pygame music is playing, don't do anything
     if pygame.mixer.music.get_busy():
@@ -162,6 +160,15 @@ def play_on_close():
         pygame.mixer.music.play()
         CLOSE_INDEX += 1
 
+def update_active_effects():
+    """
+    Update the list of active sound effects based on the current settings.
+    """
+    global ACTIVE_ON_OPEN_EFFECTS, ACTIVE_ON_CLOSE_EFFECTS
+    ACTIVE_ON_OPEN_EFFECTS = [effect for effect in SOUND_EFFECTS if effect.on_open]
+    ACTIVE_ON_CLOSE_EFFECTS = [effect for effect in SOUND_EFFECTS if effect.on_close]
+
+update_active_effects()
 
 if __name__ == "__main__":
     app.run()

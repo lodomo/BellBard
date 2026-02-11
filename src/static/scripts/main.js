@@ -49,7 +49,7 @@ function renderHeader() {
   logo.addEventListener("click", () => {
     logo.src = "static/images/sing.gif";
     fetch("/play", {
-      method: "POST",
+      method: "GET",
     })
       .then(response => {
         if (!response.ok) {
