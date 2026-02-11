@@ -115,6 +115,16 @@ function renderVolumeControl(parent) {
   volumeBar.max = 100;
   volumeBar.value = LAST_VOLUME;
 
+  fetch("/volume")
+    .then(response => response.json())
+    .then(data => {
+      volumeBar.value = data.volume;
+      setVolumeIcon();
+    })
+    .catch(error => {
+      console.error("Error fetching volume:", error);
+    });
+
   function setVolumeIcon() {
     if (volumeBar.value == 0) {
       volumeIcon.src = VOLUME[0];

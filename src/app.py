@@ -8,6 +8,7 @@ from .settings import load_settings, save_settings, load_new_files
 TOML_FILE_PATH = "./src/settings.toml"
 
 app = Flask(__name__)
+pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.mixer.init()
 
 SOUND_EFFECTS = []
@@ -115,6 +116,15 @@ def set_volume():
     volume_level = float(json.get("volume")) / 100
     pygame.mixer.music.set_volume(volume_level)
     return {"message": "Volume set successfully"}, 200
+
+@app.route("/volume", methods=["GET"])
+def get_volume():
+    """
+    Get the current volume level.
+    """
+    volume_level = pygame.mixer.music.get_volume() * 100
+    print(f"Current volume level: {volume_level}")
+    return {"volume": volume_level}, 200
 
 
 @app.route("/play", methods=["GET"])
