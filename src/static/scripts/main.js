@@ -48,9 +48,17 @@ function renderHeader() {
   // On click of the image, change the image to something sing for 2 seconds.
   logo.addEventListener("click", () => {
     logo.src = "static/images/sing.gif";
-    fetch("/play/", {
+    fetch("/play", {
       method: "POST",
     })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error playing sound: ${response.statusText}`);
+        }
+      })
+      .catch(error => {
+        console.error("Error playing sound:", error);
+      });
     setTimeout(() => {
       logo.src = "static/images/idle.gif";
     }, 4000);
@@ -184,23 +192,37 @@ function addSoundToList(parent, name, id, onOpen, onClose) {
   doorOpenIcon.addEventListener("click", () => {
     onOpen = !onOpen;
     doorOpenIcon.src = DOOR_OPEN[onOpen];
-    fetch(`/toggle_state/${id}/`, {
+
+    fetch(`/toggle_on_open/${id}`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ state: "open", value: onOpen }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error toggling on_open for sound ${name}: ${response.statusText}`);
+        }
+      })
+      .catch(error => {
+        console.error(`Error toggling on_open for sound ${name}:`, error);
+      });
+
+
     });
   
   doorClosedIcon.addEventListener("click", () => {
     onClose = !onClose;
     doorClosedIcon.src = DOOR_CLOSED[onClose];
-    fetch(`/toggle_state/${id}/`, {
+
+    fetch(`/toggle_on_close/${id}`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ state: "closed", value: onClose }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error toggling on_close for sound ${name}: ${response.statusText}`);
+        }
+      })
+      .catch(error => {
+        console.error(`Error toggling on_close for sound ${name}:`, error);
+      });
     });
 
   /* If the play button is clicked, play the sound. Leave a placeholder for API work. */
