@@ -138,6 +138,7 @@ def play_on_open():
 
     if ACTIVE_ON_OPEN_EFFECTS:
         effect = ACTIVE_ON_OPEN_EFFECTS[OPEN_INDEX]
+        print(f"Playing {effect.name} on open")
         pygame.mixer.music.load(effect.file_path)
         pygame.mixer.music.play()
         OPEN_INDEX += 1
@@ -156,6 +157,7 @@ def play_on_close():
 
     if ACTIVE_ON_CLOSE_EFFECTS:
         effect = ACTIVE_ON_CLOSE_EFFECTS[CLOSE_INDEX]
+        print(f"Playing {effect.name} on close")
         pygame.mixer.music.load(effect.file_path)
         pygame.mixer.music.play()
         CLOSE_INDEX += 1
