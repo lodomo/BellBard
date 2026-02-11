@@ -118,6 +118,7 @@ function renderVolumeControl(parent) {
   fetch("/volume")
     .then(response => response.json())
     .then(data => {
+      console.log("Fetched volume:", data);
       volumeBar.value = data.volume;
       setVolumeIcon();
     })
