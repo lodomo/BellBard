@@ -114,6 +114,7 @@ def set_volume():
     """
     json = request.get_json()
     volume_level = float(json.get("volume")) / 100
+    print(f"Setting volume to {volume_level}")
     pygame.mixer.music.set_volume(volume_level)
     return {"message": "Volume set successfully"}, 200
 
