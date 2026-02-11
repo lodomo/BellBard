@@ -5,13 +5,9 @@ import os
 from .settings import load_settings, save_settings, load_new_files
 # import random
 
-import os
-os.environ['SDL_AUDIODRIVER'] = 'alsa'  # or 'dsp' or 'pulse'
-
 TOML_FILE_PATH = "./src/settings.toml"
 
 app = Flask(__name__)
-pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.mixer.init()
 
 SOUND_EFFECTS = []
