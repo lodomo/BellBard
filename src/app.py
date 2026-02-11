@@ -5,13 +5,21 @@ import os
 from .settings import load_settings, save_settings, load_new_files
 # import random
 
+TOML_FILE_PATH = "./src/settings.toml"
+
 app = Flask(__name__)
 pygame.mixer.init()
 
 SOUND_EFFECTS = []
-load_settings("./src/settings.toml", SOUND_EFFECTS)
+ACTIVE_ON_OPEN_EFFECTS = []
+ACTIVE_ON_CLOSE_EFFECTS = []
+
+OPEN_INDEX = 0
+CLOSE_INDEX = 0
+
+load_settings(TOML_FILE_PATH, SOUND_EFFECTS)
 load_new_files("./src/static/sounds", SOUND_EFFECTS)
-save_settings("./src/settings.toml", SOUND_EFFECTS)
+save_settings(TOML_FILE_PATH, SOUND_EFFECTS)
 
 
 @app.route("/")
@@ -31,6 +39,30 @@ def get_sounds():
     return jsonify(json), 200
 
 
+@app.route("/toggle_state/<int:id>", methods=["POST"])
+def toggle_state(id):
+    """
+    Activate a sound effect on open based on the name received in the request.
+    """
+    # Toggle the on_open or on_close state of the sound effect with the given name.
+    # Does the json have "on_open" or "on_close" as a key?
+
+    global ACTIVE_ON_OPEN_EFFECTS, ACTIVE_ON_CLOSE_EFFECTS
+
+    json = request.get_json()
+    for effect in SOUND_EFFECTS:
+        if effect.id == int(id):
+            effect.on_open = json.get("on_open", effect.on_open)
+            effect.on_close = json.get("on_close", effect.on_close)
+            save_settings(TOML_FILE_PATH, SOUND_EFFECTS)
+            return {"message": "Sound effect activated on open"}, 200
+
+    ACTIVE_ON_OPEN_EFFECTS = [effect for effect in SOUND_EFFECTS if effect.on_open]
+    ACTIVE_ON_CLOSE_EFFECTS = [effect for effect in SOUND_EFFECTS if effect.on_close]
+
+    return {"message": "Sound effect not found"}, 404
+
+
 @app.route("/play_on_device/<string:id>", methods=["POST"])
 def play_on_device(id):
     """
@@ -45,8 +77,6 @@ def play_on_device(id):
     return {"message": "Sound effect not found"}, 404
 
 
-
-
 @app.route("/upload", methods=["POST"])
 def upload():
     """
@@ -58,7 +88,7 @@ def upload():
     file.save(save_path)
 
     load_new_files("./src/static/sounds", SOUND_EFFECTS)
-    save_settings("./src/settings.toml", SOUND_EFFECTS)
+    save_settings(TOML_FILE_PATH, SOUND_EFFECTS)
 
     return "File uploaded successfully", 200
 
@@ -80,6 +110,55 @@ def set_volume():
     volume_level = float(request.form["volume"])
     pygame.mixer.music.set_volume(volume_level)
     return {"message": "Volume set successfully"}, 200
+
+
+@app.route("/play/<string:open_or_close>", methods=["POST"])
+def play(open_or_close="open"):
+    """
+    Play all active sound effects based on the value received in the request.
+    """
+    if open_or_close == "close":
+        play_on_close()
+        return {"message": "Playing on close sound effects"}, 200
+
+    play_on_open()
+    return {"message": "Playing on open sound effects"}, 200
+
+
+def play_on_open():
+    """
+    Play all active on open sound effects.
+    """
+    global OPEN_INDEX
+    OPEN_INDEX %= len(ACTIVE_ON_OPEN_EFFECTS)
+
+    # If pygame music is playing, don't do anything
+    if pygame.mixer.music.get_busy():
+        return
+
+    if ACTIVE_ON_OPEN_EFFECTS:
+        effect = ACTIVE_ON_OPEN_EFFECTS[OPEN_INDEX]
+        pygame.mixer.music.load(effect.file_path)
+        pygame.mixer.music.play()
+        OPEN_INDEX += 1
+
+
+def play_on_close():
+    """
+    Play all active on close sound effects.
+    """
+    global CLOSE_INDEX
+    CLOSE_INDEX %= len(ACTIVE_ON_CLOSE_EFFECTS)
+
+    # If pygame music is playing, don't do anything
+    if pygame.mixer.music.get_busy():
+        return
+
+    if ACTIVE_ON_CLOSE_EFFECTS:
+        effect = ACTIVE_ON_CLOSE_EFFECTS[CLOSE_INDEX]
+        pygame.mixer.music.load(effect.file_path)
+        pygame.mixer.music.play()
+        CLOSE_INDEX += 1
 
 
 if __name__ == "__main__":

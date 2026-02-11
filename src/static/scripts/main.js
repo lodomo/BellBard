@@ -48,6 +48,9 @@ function renderHeader() {
   // On click of the image, change the image to something sing for 2 seconds.
   logo.addEventListener("click", () => {
     logo.src = "static/images/sing.gif";
+    fetch("/play/", {
+      method: "POST",
+    })
     setTimeout(() => {
       logo.src = "static/images/idle.gif";
     }, 4000);
@@ -181,11 +184,23 @@ function addSoundToList(parent, name, id, onOpen, onClose) {
   doorOpenIcon.addEventListener("click", () => {
     onOpen = !onOpen;
     doorOpenIcon.src = DOOR_OPEN[onOpen];
+    fetch(`/toggle_state/${id}/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ state: "open", value: onOpen }),
     });
   
   doorClosedIcon.addEventListener("click", () => {
     onClose = !onClose;
     doorClosedIcon.src = DOOR_CLOSED[onClose];
+    fetch(`/toggle_state/${id}/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ state: "closed", value: onClose }),
     });
 
   /* If the play button is clicked, play the sound. Leave a placeholder for API work. */

@@ -1,7 +1,7 @@
 [[sound_effects]]
 file_path = "./src/static/sounds/capcom.mp3"
 name = "Capcom"
-on_open = false
+on_open = true
 on_close = false
 
 [[sound_effects]]
