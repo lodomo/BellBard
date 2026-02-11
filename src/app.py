@@ -9,6 +9,7 @@ TOML_FILE_PATH = "./src/settings.toml"
 
 app = Flask(__name__)
 pygame.mixer.init()
+pygame.mixer.music.set_volume(0.5)
 
 SOUND_EFFECTS = []
 ACTIVE_ON_OPEN_EFFECTS = []
