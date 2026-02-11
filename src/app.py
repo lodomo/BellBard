@@ -103,7 +103,7 @@ def volume():
     """
     Return the current volume level as a JSON response.
     """
-    volume_level = pygame.mixer.music.get_volume()
+    volume_level = pygame.mixer.music.get_volume() * 100
     return {"volume": volume_level}, 200
 
 
