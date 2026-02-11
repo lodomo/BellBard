@@ -1,7 +1,7 @@
 [[sound_effects]]
 file_path = "./src/static/sounds/capcom.mp3"
 name = "Capcom"
-on_open = true
+on_open = false
 on_close = false
 
 [[sound_effects]]
@@ -17,7 +17,7 @@ on_open = false
 on_close = false
 
 [[sound_effects]]
-file_path = "./src/static/sounds/mario-tunnel.mp3"
+file_path = "./src/static/sounds/mario-tunnel.wav"
 name = "Mario Tunnel"
 on_open = false
 on_close = false
@@ -37,6 +37,6 @@ on_close = false
 [[sound_effects]]
 file_path = "./src/static/sounds/zelda-solve.mp3"
 name = "Zelda Solve"
-on_open = false
+on_open = true
 on_close = false
 

@@ -48,13 +48,17 @@ def toggle_state(id):
     # Does the json have "on_open" or "on_close" as a key?
 
     global ACTIVE_ON_OPEN_EFFECTS, ACTIVE_ON_CLOSE_EFFECTS
+    global SOUND_EFFECTS
 
     json = request.get_json()
+    print(f"Received toggle request for id: {id} with data: {json}")
     for effect in SOUND_EFFECTS:
         if effect.id == int(id):
             effect.on_open = json.get("on_open", effect.on_open)
             effect.on_close = json.get("on_close", effect.on_close)
+            print(f"Toggled {effect.name} to on_open: {effect.on_open}, on_close: {effect.on_close}")
             save_settings(TOML_FILE_PATH, SOUND_EFFECTS)
+            update_active_effects()
             return {"message": "Sound effect activated on open"}, 200
 
     update_active_effects()
@@ -73,6 +77,7 @@ def play_on_device(id):
             # Remove ./src/ from the filepath, quirk of flask
             path = effect.file_path.replace("./src/", "")
             return send_file(path, mimetype="audio/mpeg")
+
     return {"message": "Sound effect not found"}, 404
 
 
@@ -106,7 +111,8 @@ def set_volume():
     """
     Set the volume level based on the value received in the request.
     """
-    volume_level = float(request.form["volume"])
+    json = request.get_json()
+    volume_level = float(json.get("volume")) / 100
     pygame.mixer.music.set_volume(volume_level)
     return {"message": "Volume set successfully"}, 200
 
@@ -119,6 +125,13 @@ def play():
     play_on_open()
     print("Played on open sound effects")
     return {"message": "Playing on open sound effects"}, 200
+
+@app.route("/is_playing", methods=["GET"])
+def is_playing():
+    """
+    Return whether or not a sound effect is currently playing.
+    """
+    return {"is_playing": pygame.mixer.music.get_busy()}, 200
 
 
 def play_on_open():
@@ -139,6 +152,8 @@ def play_on_open():
         pygame.mixer.music.load(effect.file_path)
         pygame.mixer.music.play()
         OPEN_INDEX += 1
+        # Return the LENGTH of the file in seconds
+        return {"message": f"Playing {effect.name} on open", "length": pygame.mixer.Sound(effect.file_path).get_length()}
 
 
 def play_on_close():

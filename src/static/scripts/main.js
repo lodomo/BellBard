@@ -59,9 +59,24 @@ function renderHeader() {
       .catch(error => {
         console.error("Error playing sound:", error);
       });
-    setTimeout(() => {
-      logo.src = "static/images/idle.gif";
-    }, 4000);
+
+    // Keep checking "/is_playing" every 100ms and if it returns is_playing: false, change the image back to idle.gif. If it returns is_playing: true, keep the image as sing.gif.
+    const checkPlayingInterval = setInterval(() => {
+      fetch("/is_playing")
+        .then(response => response.json())
+        .then(data => {
+          if (!data.is_playing) {
+            logo.src = "static/images/idle.gif";
+            clearInterval(checkPlayingInterval);
+          }
+        })
+        .catch(error => {
+          console.error("Error checking if sound is playing:", error);
+          // In case of an error, assume the sound has stopped to prevent the logo from being stuck on sing.gif.
+          logo.src = "static/images/idle.gif";
+          clearInterval(checkPlayingInterval);
+        });
+    }, 100);
   });
 
   renderVolumeControl(header);
@@ -127,11 +142,44 @@ function renderVolumeControl(parent) {
       else {
       volumeBar.value = LAST_VOLUME;
     }
+
+
+    fetch("/volume", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ volume: volumeBar.value }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error setting volume: ${response.statusText}`);
+        }
+      })
+      .catch(error => {
+        console.error("Error setting volume:", error);
+      });
+
     setVolumeIcon();
   });
 
   /* If the volume bar is changed, and the value is 0, change the icon to volume off. If the value is greater than 0, change the icon to volume on. */
   volumeBar.addEventListener("input", () => {
+    fetch("/volume", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ volume: volumeBar.value }),
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error setting volume: ${response.statusText}`);
+        }
+      })
+      .catch(error => {
+        console.error("Error setting volume:", error);
+      });
     setVolumeIcon();
   });
 }
@@ -193,8 +241,20 @@ function addSoundToList(parent, name, id, onOpen, onClose) {
     onOpen = !onOpen;
     doorOpenIcon.src = DOOR_OPEN[onOpen];
 
-    fetch(`/toggle_on_open/${id}`, {
+    // Call "toggle_state/id" with a POST request.
+    // Payload is "on_open" or "on_close", and the new value of that state.
+    const payload = {
+      on_open: onOpen,
+    }
+
+    console.log('Payload for toggling on_open:', payload);
+
+    fetch(`/toggle_state/${id}`, { 
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     })
       .then(response => {
         if (!response.ok) {
@@ -205,15 +265,22 @@ function addSoundToList(parent, name, id, onOpen, onClose) {
         console.error(`Error toggling on_open for sound ${name}:`, error);
       });
 
-
     });
   
   doorClosedIcon.addEventListener("click", () => {
     onClose = !onClose;
     doorClosedIcon.src = DOOR_CLOSED[onClose];
 
-    fetch(`/toggle_on_close/${id}`, {
+    const payload = {
+      on_close: onClose,
+    }
+
+    fetch(`/toggle_state/${id}`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     })
       .then(response => {
         if (!response.ok) {
