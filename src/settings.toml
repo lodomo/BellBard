@@ -1,16 +1,4 @@
 [[sound_effects]]
-file_path = "./src/static/sounds/capcom.mp3"
-name = "Capcom"
-on_open = false
-on_close = false
-
-[[sound_effects]]
-file_path = "./src/static/sounds/famima.mp3"
-name = "Famima!"
-on_open = false
-on_close = false
-
-[[sound_effects]]
 file_path = "./src/static/sounds/konami.wav"
 name = "Konami"
 on_open = false
@@ -23,20 +11,32 @@ on_open = false
 on_close = false
 
 [[sound_effects]]
-file_path = "./src/static/sounds/minecraft-close.mp3"
+file_path = "./src/static/sounds/capcom.wav"
+name = "Capcom"
+on_open = false
+on_close = false
+
+[[sound_effects]]
+file_path = "./src/static/sounds/famima.wav"
+name = "Famima!"
+on_open = false
+on_close = false
+
+[[sound_effects]]
+file_path = "./src/static/sounds/minecraft-close.wav"
 name = "Minecraft Close"
 on_open = false
 on_close = false
 
 [[sound_effects]]
-file_path = "./src/static/sounds/minecraft-open.mp3"
+file_path = "./src/static/sounds/minecraft-open.wav"
 name = "Minecraft Open"
 on_open = false
 on_close = false
 
 [[sound_effects]]
-file_path = "./src/static/sounds/zelda-solve.mp3"
+file_path = "./src/static/sounds/zelda-solve.wav"
 name = "Zelda Solve"
-on_open = true
+on_open = false
 on_close = false
 
