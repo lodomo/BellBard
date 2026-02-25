@@ -13,7 +13,7 @@ app = Flask(__name__)
 os.environ['SDL_AUDIODRIVER'] = 'alsa'
 os.environ['AUDIODEV'] = 'hw:1,0'
 pygame.mixer.init()
-pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.set_volume(1)
 
 SOUND_EFFECTS = []
 ACTIVE_ON_OPEN_EFFECTS = []
