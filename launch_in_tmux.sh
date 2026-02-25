@@ -4,8 +4,5 @@
 
 tmux new-session -d -s famima
 
-# Make sure you're in the folder /home/lodomo/BellBard
-tmux send-keys -t famima "cd /home/lodomo/BellBard" C-m
-
 # Run the command launch.sh
-tmux send-keys -t famima "./launch.sh" C-m
+tmux send-keys -t famima "/home/lodomo/BellBard/launch.sh" C-m
