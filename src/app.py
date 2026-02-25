@@ -3,7 +3,8 @@ from .sound_effect import SoundEffect
 import pygame
 import os
 from .settings import load_settings, save_settings, load_new_files
-# import random
+import threading
+import gpiozero as gpio
 
 TOML_FILE_PATH = "./src/settings.toml"
 
@@ -21,6 +22,37 @@ CLOSE_INDEX = 0
 load_settings(TOML_FILE_PATH, SOUND_EFFECTS)
 load_new_files("./src/static/sounds", SOUND_EFFECTS)
 save_settings(TOML_FILE_PATH, SOUND_EFFECTS)
+
+LEFT_PIN = 17
+RIGHT_PIN = 4
+LEFT_DOOR_BUTTON = gpio.Button(LEFT_PIN)
+RIGHT_DOOR_BUTTON = gpio.Button(RIGHT_PIN)
+
+def monitor_doors():
+    was_left_pressed = False
+    was_right_pressed = False
+    while True:
+        if LEFT_DOOR_BUTTON.is_pressed and not was_left_pressed:
+            print("Left door opened")
+            play_on_open()
+            was_left_pressed = True
+        elif not LEFT_DOOR_BUTTON.is_pressed and was_left_pressed:
+            print("Left door closed")
+            play_on_close()
+            was_left_pressed = False
+
+        if RIGHT_DOOR_BUTTON.is_pressed and not was_right_pressed:
+            print("Right door opened")
+            play_on_open()
+            was_right_pressed = True
+        elif not RIGHT_DOOR_BUTTON.is_pressed and was_right_pressed:
+            print("Right door closed")
+            play_on_close()
+            was_right_pressed = False
+
+
+door_monitor_thread = threading.Thread(target=monitor_doors, daemon=True)
+door_monitor_thread.start()
 
 
 @app.route("/")
