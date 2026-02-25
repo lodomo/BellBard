@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 # Create a tmux session called "famima"
 
