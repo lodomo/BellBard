@@ -16,4 +16,8 @@ sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 5000
 sudo netfilter-persistent save
 sudo iptables -t nat -L -n -v
 
+sudo cp ./bellbard.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable bellbard.service
+
 echo "Installation complete, run ./launch.sh to start the server"
