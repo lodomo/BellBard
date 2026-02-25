@@ -19,41 +19,16 @@ ACTIVE_ON_CLOSE_EFFECTS = []
 OPEN_INDEX = 0
 CLOSE_INDEX = 0
 
-load_settings(TOML_FILE_PATH, SOUND_EFFECTS)
-load_new_files("./src/static/sounds", SOUND_EFFECTS)
-save_settings(TOML_FILE_PATH, SOUND_EFFECTS)
-
 LEFT_PIN = 17
 RIGHT_PIN = 4
 LEFT_DOOR_BUTTON = gpio.Button(LEFT_PIN)
 RIGHT_DOOR_BUTTON = gpio.Button(RIGHT_PIN)
 
-def monitor_doors():
-    was_left_pressed = True
-    was_right_pressed = True
-    while True:
-        if LEFT_DOOR_BUTTON.is_pressed and not was_left_pressed:
-            print("Left door opened")
-            play_on_close()
-            was_left_pressed = True
-        elif not LEFT_DOOR_BUTTON.is_pressed and was_left_pressed:
-            print("Left door closed")
-            play_on_open()
-            was_left_pressed = False
-
-        if RIGHT_DOOR_BUTTON.is_pressed and not was_right_pressed:
-            print("Right door opened")
-            play_on_close()
-            was_right_pressed = True
-        elif not RIGHT_DOOR_BUTTON.is_pressed and was_right_pressed:
-            print("Right door closed")
-            play_on_open()
-            was_right_pressed = False
 
 
-door_monitor_thread = threading.Thread(target=monitor_doors, daemon=True)
-door_monitor_thread.start()
-
+load_settings(TOML_FILE_PATH, SOUND_EFFECTS)
+load_new_files("./src/static/sounds", SOUND_EFFECTS)
+save_settings(TOML_FILE_PATH, SOUND_EFFECTS)
 
 @app.route("/")
 def index():
@@ -227,6 +202,34 @@ def update_active_effects():
     ACTIVE_ON_CLOSE_EFFECTS = [effect for effect in SOUND_EFFECTS if effect.on_close]
 
 update_active_effects()
+
+def monitor_doors():
+    was_left_pressed = True
+    was_right_pressed = True
+    while True:
+        if LEFT_DOOR_BUTTON.is_pressed and not was_left_pressed:
+            print("Left door opened")
+            play_on_close()
+            was_left_pressed = True
+        elif not LEFT_DOOR_BUTTON.is_pressed and was_left_pressed:
+            print("Left door closed")
+            play_on_open()
+            was_left_pressed = False
+
+        if RIGHT_DOOR_BUTTON.is_pressed and not was_right_pressed:
+            print("Right door opened")
+            play_on_close()
+            was_right_pressed = True
+        elif not RIGHT_DOOR_BUTTON.is_pressed and was_right_pressed:
+            print("Right door closed")
+            play_on_open()
+            was_right_pressed = False
+
+
+door_monitor_thread = threading.Thread(target=monitor_doors, daemon=True)
+door_monitor_thread.start()
+
+
 
 if __name__ == "__main__":
     app.run()
