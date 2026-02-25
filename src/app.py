@@ -29,8 +29,8 @@ LEFT_DOOR_BUTTON = gpio.Button(LEFT_PIN)
 RIGHT_DOOR_BUTTON = gpio.Button(RIGHT_PIN)
 
 def monitor_doors():
-    was_left_pressed = LEFT_DOOR_BUTTON.is_pressed
-    was_right_pressed = RIGHT_DOOR_BUTTON.is_pressed
+    was_left_pressed = True
+    was_right_pressed = True
     while True:
         if LEFT_DOOR_BUTTON.is_pressed and not was_left_pressed:
             print("Left door opened")
