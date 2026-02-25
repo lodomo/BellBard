@@ -5,6 +5,7 @@ import os
 from .settings import load_settings, save_settings, load_new_files
 import threading
 import gpiozero as gpio
+import time
 
 TOML_FILE_PATH = "./src/settings.toml"
 
@@ -204,26 +205,59 @@ def update_active_effects():
 update_active_effects()
 
 def monitor_doors():
-    was_left_pressed = True
-    was_right_pressed = True
+
+    was_left_pressed = LEFT_DOOR_BUTTON.is_pressed
+    was_right_pressed = RIGHT_DOOR_BUTTON.is_pressed
+
+    last_left_time = time.time()
+    last_right_time = time.time()
+
     while True:
         if LEFT_DOOR_BUTTON.is_pressed and not was_left_pressed:
+            elapsed_time = time.time() - last_left_time
+
+            if elapsed_time < 1:
+                print("Left door bounce detected, ignoring")
+                continue
+
             print("Left door closed")
             play_on_close()
             was_left_pressed = True
+            last_left_time = time.time()
+
         elif not LEFT_DOOR_BUTTON.is_pressed and was_left_pressed:
+            eslapsed_time = time.time() - last_left_time
+
+            if eslapsed_time < 1:
+                print("Left door bounce detected, ignoring")
+                continue
+
             print("Left door opened")
             play_on_open()
             was_left_pressed = False
+            last_left_time = time.time()
 
         if RIGHT_DOOR_BUTTON.is_pressed and not was_right_pressed:
+            elapsed_time = time.time() - last_right_time
+            if elapsed_time < 1:
+                print("Right door bounce detected, ignoring")
+                continue
+
             print("Right door closed")
             play_on_close()
             was_right_pressed = True
+            last_right_time = time.time()
+
         elif not RIGHT_DOOR_BUTTON.is_pressed and was_right_pressed:
+            elapsed_time = time.time() - last_right_time
+            if elapsed_time < 1:
+                print("Right door bounce detected, ignoring")
+                continue
+
             print("Right door opened")
             play_on_open()
             was_right_pressed = False
+            last_right_time = time.time()
 
 
 door_monitor_thread = threading.Thread(target=monitor_doors, daemon=True)
