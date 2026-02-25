@@ -33,21 +33,21 @@ def monitor_doors():
     was_right_pressed = False
     while True:
         if LEFT_DOOR_BUTTON.is_pressed and not was_left_pressed:
-            print("Left door opened")
-            play_on_open()
+            # print("Left door opened")
+            play_on_close()
             was_left_pressed = True
         elif not LEFT_DOOR_BUTTON.is_pressed and was_left_pressed:
-            print("Left door closed")
-            play_on_close()
+            # print("Left door closed")
+            play_on_open()
             was_left_pressed = False
 
         if RIGHT_DOOR_BUTTON.is_pressed and not was_right_pressed:
-            print("Right door opened")
-            play_on_open()
+            # print("Right door opened")
+            play_on_close()
             was_right_pressed = True
         elif not RIGHT_DOOR_BUTTON.is_pressed and was_right_pressed:
-            print("Right door closed")
-            play_on_close()
+            # print("Right door closed")
+            play_on_open()
             was_right_pressed = False
 
 
