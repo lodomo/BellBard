@@ -10,6 +10,8 @@ import time
 TOML_FILE_PATH = "./src/settings.toml"
 
 app = Flask(__name__)
+os.environ["SDL_AUDIODRIVER"] = "alsa"
+os.environ["AUDIODEV"] = "hw:UACDemoV10"
 pygame.mixer.init()
 pygame.mixer.music.set_volume(1)
 
